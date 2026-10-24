@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Regret OS — 把你的黑历史变成决策燃料的黑客终端决策引擎">
+<title>Regret OS v2.4.1 — Decision Engine</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23020402'/%3E%3Cpath d='M8 10l6 6-6 6' stroke='%2322ff66' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='18' y='14' width='2' height='8' fill='%2322ff66'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="crt-overlay" aria-hidden="true"></div>
+<div class="flicker-overlay" aria-hidden="true"></div>
+
+<div class="app">
+
+  <!-- ══════════ TITLE BAR ══════════ -->
+  <header class="titlebar">
+    <div class="titlebar__dots">
+      <span class="dot dot--red" title="close"></span>
+      <span class="dot dot--yellow" title="minimize"></span>
+      <span class="dot dot--green" title="zoom"></span>
+    </div>
+    <div class="titlebar__path">root@regret-os<span class="dim">:</span>~/decision-engine</div>
+    <div class="titlebar__meta">
+      <span>REGRET OS v2.4.1</span>
+      <span class="sep">|</span>
+      <span>DECISION ENGINE</span>
+      <span class="sep">|</span>
+      <span id="titlebar-clock">---- -- -- --:--:--</span>
+      <span class="titlebar__winicon">▣</span>
+    </div>
+  </header>
+
+  <div class="workspace">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="sidebar">
+      <nav class="sidebar__nav">
+        <button class="nav-item is-active" data-view="engine">
+          <svg class="nav-icon" viewBox="0 0 14 14"><path d="M4 2.5l5.5 4.5L4 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="nav-label"><span class="nav-en">ENGINE</span><span class="nav-zh">决策引擎</span></span>
+        </button>
+        <button class="nav-item" data-view="history">
+          <svg class="nav-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 4.2V7l2.2 1.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span class="nav-label"><span class="nav-en">HISTORY</span><span class="nav-zh">黑历史档案</span></span>
+        </button>
+        <button class="nav-item" data-view="profiles">
+          <svg class="nav-icon" viewBox="0 0 14 14"><circle cx="7" cy="4.6" r="2.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2.4 12c.6-2.6 2.4-3.8 4.6-3.8s4 1.2 4.6 3.8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span class="nav-label"><span class="nav-en">PROFILES</span><span class="nav-zh">用户画像</span></span>
+        </button>
+        <button class="nav-item" data-view="datasources">
+          <svg class="nav-icon" viewBox="0 0 14 14"><ellipse cx="7" cy="3.4" rx="4.6" ry="1.9" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2.4 3.4v3.4c0 1.05 2.06 1.9 4.6 1.9s4.6-.85 4.6-1.9V3.4M2.4 6.8v3.4c0 1.05 2.06 1.9 4.6 1.9s4.6-.85 4.6-1.9V6.8" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          <span class="nav-label"><span class="nav-en">DATASOURCES</span><span class="nav-zh">数据源</span></span>
+        </button>
+        <button class="nav-item" data-view="settings">
+          <svg class="nav-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 1.4v1.8M7 10.8v1.8M1.4 7h1.8M10.8 7h1.8M3 3l1.3 1.3M9.7 9.7L11 11M11 3L9.7 4.3M4.3 9.7L3 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span class="nav-label"><span class="nav-en">SETTINGS</span><span class="nav-zh">引擎设置</span></span>
+        </button>
+      </nav>
+
+      <div class="sidebar__section-label">SYSTEM <span class="nav-zh">系统</span></div>
+
+      <nav class="sidebar__nav">
+        <button class="nav-item" data-view="logs">
+          <svg class="nav-icon" viewBox="0 0 14 14"><path d="M2.2 3.5h9.6M2.2 7h9.6M2.2 10.5h6.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span class="nav-label"><span class="nav-en">LOGS</span><span class="nav-zh">系统日志</span></span>
+        </button>
+        <button class="nav-item" data-view="diagnostics">
+          <svg class="nav-icon" viewBox="0 0 14 14"><path d="M1.4 7h2.6l1.5-3.4L7.6 10l1.4-3h3.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="nav-label"><span class="nav-en">DIAGNOSTICS</span><span class="nav-zh">健康诊断</span></span>
+        </button>
+        <button class="nav-item" data-view="about">
+          <svg class="nav-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.4" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="6.3" y="6.1" width="1.4" height="4" rx=".4" fill="currentColor"/><circle cx="7" cy="4.2" r=".85" fill="currentColor"/></svg>
+          <span class="nav-label"><span class="nav-en">ABOUT</span><span class="nav-zh">关于本机</span></span>
+        </button>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="sidebar__hint">v2.4.1 · offline</div>
+        <div class="sidebar__hint dim">// clarity over comfort</div>
+      </div>
+    </aside>
+
+    <!-- ══════════ MAIN ══════════ -->
+    <main class="main">
+      <div class="views" id="views">
+
+        <!-- ─── ENGINE ─── -->
+        <section class="view is-active" id="view-engine">
+          <div class="engine-top">
+            <div class="panel boot-panel">
+              <div class="boot-log" id="boot-log"></div>
+            </div>
+
+            <div class="panel sys-panel">
+              <pre class="ascii-art glitch" id="ascii-art" aria-label="DECISION ENGINE"></pre>
+              <div class="sys-title">DECISION ENGINE <span class="dim-sys">v2.4.1</span></div>
+              <div class="sys-rows">
+                <div class="sys-row"><span class="k">USER</span><span class="v">root</span></div>
+                <div class="sys-row"><span class="k">HOST</span><span class="v">regret-os</span></div>
+                <div class="sys-row"><span class="k">UPTIME</span><span class="v" id="uptime">00:00:00</span></div>
+                <div class="sys-row"><span class="k">MODE</span><span class="v">offline</span></div>
+                <div class="sys-row"><span class="k">LLM</span><span class="v">local (7B)</span></div>
+                <div class="sys-row"><span class="k">SAFETY</span><span class="v">enhanced</span></div>
+                <div class="sys-row"><span class="k">PROFILE</span><span class="v">default</span></div>
+                <div class="sys-row"><span class="k">GOAL</span><span class="v">better decisions</span></div>
+                <div class="sys-row sys-row--foot"><span class="v dim">// clarity over comfort</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">DECISION ENGINE <span class="section-comment">// 分析、权衡、预测，然后判决</span></div>
+
+          <!-- CURRENT QUERY -->
+          <div class="panel query-panel">
+            <div class="panel-head">
+              <span class="panel-head__title"><i class="bar bar--green"></i>CURRENT QUERY <span class="zh">当前问题</span></span>
+              <span class="chips">
+                <span class="chip">CONTEXT <b id="chip-context">—</b></span>
+                <span class="chip">RISK <b id="chip-risk" class="chip-risk">—</b></span>
+                <span class="chip">HORIZON <b id="chip-horizon">—</b></span>
+              </span>
+            </div>
+            <div class="query-text" id="query-text"><span class="dim">// awaiting input — ask the engine something you will regret not asking</span></div>
+
+            <!-- ANALYSIS -->
+            <div class="analysis" id="analysis" hidden>
+              <div class="analysis__lead">&gt; Running multi-dimensional analysis <span class="dots">...</span></div>
+              <div class="progress-row">
+                <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+                <div class="progress-pct" id="progress-pct">0%</div>
+              </div>
+              <div class="steps" id="steps"></div>
+            </div>
+
+            <!-- RESULT -->
+            <div class="result" id="result" hidden>
+              <div class="panel-head result__head">
+                <span class="panel-head__title"><i class="bar bar--red"></i><span id="result-label">PRELIMINARY RESULT</span><span class="zh" id="result-label-zh">初步判决</span></span>
+                <span class="chips">
+                  <span class="chip">CONFIDENCE <b id="res-confidence">—</b></span>
+                  <span class="chip">RISK LEVEL <b id="res-risk" class="boxed">—</b></span>
+                  <span class="chip">IMPACT <b id="res-impact" class="boxed">—</b></span>
+                </span>
+              </div>
+              <div class="result-body">
+                <div class="result-verdict">
+                  <div class="verdict-line" id="verdict-line">
+                    <span class="verdict-icon" id="verdict-icon">⚠</span>
+                    <span class="verdict-text" id="verdict-text">—</span>
+                  </div>
+                  <p class="verdict-blurb" id="verdict-blurb"></p>
+                  <p class="verdict-cite" id="verdict-cite"></p>
+                </div>
+                <div class="result-boxes">
+                  <div class="result-box">
+                    <div class="result-box__title">KEY RISK FACTORS <span class="zh">关键风险</span></div>
+                    <ul class="result-list" id="risk-list"></ul>
+                  </div>
+                  <div class="result-box">
+                    <div class="result-box__title">SUGGESTED ALTERNATIVES <span class="zh">备选方案</span></div>
+                    <ul class="result-list" id="alt-list"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── HISTORY ─── -->
+        <section class="view" id="view-history">
+          <div class="section-title">REGRET ARCHIVE <span class="section-comment">// 你的黑历史，已索引并武器化</span></div>
+          <div class="panel">
+            <div class="panel-head">
+              <span class="panel-head__title"><i class="bar bar--green"></i>ARCHIVE ENTRIES <span class="zh">档案条目</span></span>
+              <span class="chips"><span class="chip">TOTAL <b id="archive-total">1,247</b></span><span class="chip">SESSION <b id="archive-session">0</b></span></span>
+            </div>
+            <div class="archive-note dim">&gt; tip: type <b class="hl">remember &lt;你的黑历史&gt;</b> in the command bar to feed the engine.</div>
+            <div class="archive-list" id="archive-list"></div>
+          </div>
+          <div class="panel" style="margin-top:12px">
+            <div class="panel-head">
+              <span class="panel-head__title"><i class="bar bar--amber"></i>SESSION DECISIONS <span class="zh">本次会话判决</span></span>
+            </div>
+            <div class="archive-list" id="session-list"><div class="archive-empty dim">// no decisions executed this session. the engine remembers everything you ask.</div></div>
+          </div>
+        </section>
+
+        <!-- ─── PROFILES ─── -->
+        <section class="view" id="view-profiles">
+          <div class="section-title">PROFILES <span class="section-comment">// 到底是谁在做决定</span></div>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-head__title"><i class="bar bar--green"></i>ACTIVE PROFILE <span class="zh">当前画像</span></span><span class="chips"><span class="chip">ID <b>default</b></span></span></div>
+            <div class="stat-grid">
+              <div class="stat"><span class="stat__k">RISK APPETITE · 风险偏好</span><span class="stat__v">MODERATE 适中</span><div class="meter"><i style="width:52%"></i></div></div>
+              <div class="stat"><span class="stat__k">REGRET SENSITIVITY · 后悔敏感度</span><span class="stat__v">HIGH 偏高</span><div class="meter"><i style="width:86%"></i></div></div>
+              <div class="stat"><span class="stat__k">IMPULSIVITY INDEX · 冲动指数</span><span class="stat__v">0.71 危险</span><div class="meter"><i style="width:71%"></i></div></div>
+              <div class="stat"><span class="stat__k">SLEEP-DEPRIVED DECISIONS · 熬夜决策</span><span class="stat__v warn">AVOID 禁止</span><div class="meter"><i class="meter--red" style="width:93%"></i></div></div>
+              <div class="stat"><span class="stat__k">EMOTIONAL BUFFER · 情绪缓存</span><span class="stat__v">2.1 GB 不足</span><div class="meter"><i style="width:38%"></i></div></div>
+              <div class="stat"><span class="stat__k">MOM APPROVAL RATING · 妈妈满意度</span><span class="stat__v">PENDING 待定</span><div class="meter"><i class="meter--amber" style="width:20%"></i></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── DATASOURCES ─── -->
+        <section class="view" id="view-datasources">
+          <div class="section-title">DATASOURCES <span class="section-comment">// 燃料来源：不好的回忆</span></div>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-head__title"><i class="bar bar--green"></i>MOUNTED SOURCES <span class="zh">已挂载数据源</span></span></div>
+            <div class="ds-list">
+              <div class="ds-row"><span class="ds-status ok">●</span><span class="ds-name">regret-archive.db</span><span class="ds-meta">1,247 entries · synced 2m ago</span></div>
+              <div class="ds-row"><span class="ds-status ok">●</span><span class="ds-name">chat-screenshots/</span><span class="ds-meta">3,918 files · DO NOT OPEN</span></div>
+              <div class="ds-row"><span class="ds-status ok">●</span><span class="ds-name">moments-2019–2021</span><span class="ds-meta">encrypted · key: therapy</span></div>
+              <div class="ds-row"><span class="ds-status warn">●</span><span class="ds-name">voice-mails/</span><span class="ds-meta">degraded · courage missing</span></div>
+              <div class="ds-row"><span class="ds-status ok">●</span><span class="ds-name">heuristics/local-7b</span><span class="ds-meta">decision model · offline</span></div>
+              <div class="ds-row"><span class="ds-status off">●</span><span class="ds-name">ex's-new-dog.jpg</span><span class="ds-meta">mounted, never deleted, don't ask</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── SETTINGS ─── -->
+        <section class="view" id="view-settings">
+          <div class="section-title">SETTINGS <span class="section-comment">// 调校这台审判你的机器</span></div>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-head__title"><i class="bar bar--green"></i>ENGINE MODULES <span class="zh">引擎模块</span></span></div>
+            <div class="ds-list">
+              <div class="ds-row"><span class="ds-status ok">●</span><span class="ds-name">paralysis-mode</span><span class="ds-meta">enabled — infinite options, zero commits</span></div>
+              <div class="ds-row"><span class="ds-status ok">●</span><span class="ds-name">devil's-advocate</span><span class="ds-meta">enabled — argues with you at 3am</span></div>
+              <div class="ds-row"><span class="ds-status ok">●</span><span class="ds-name">mom-emulation</span><span class="ds-meta">enabled — “稳定点” × 100</span></div>
+              <div class="ds-row"><span class="ds-status off">●</span><span class="ds-name">hopium-injector</span><span class="ds-meta">disabled — you relapsed last time</span></div>
+              <div class="ds-row"><span class="ds-status warn">●</span><span class="ds-name">sarcasm-level</span><span class="ds-meta">6 / 10 — adjust at your own risk</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── LOGS ─── -->
+        <section class="view" id="view-logs">
+          <div class="section-title">LOGS <span class="section-comment">// 你做过的一切。一切。</span></div>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-head__title"><i class="bar bar--green"></i>SYSTEM LOG (TAIL) <span class="zh">系统日志尾部</span></span></div>
+            <div class="log-feed" id="log-feed"></div>
+          </div>
+        </section>
+
+        <!-- ─── DIAGNOSTICS ─── -->
+        <section class="view" id="view-diagnostics">
+          <div class="section-title">DIAGNOSTICS <span class="section-comment">// 操作员坏到了什么程度</span></div>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-head__title"><i class="bar bar--green"></i>MODULE STATUS <span class="zh">模块状态</span></span><span class="chips"><span class="chip">UPTIME <b id="diag-uptime">00:00:00</b></span></span></div>
+            <div class="stat-grid">
+              <div class="stat"><span class="stat__k">DECISION CORE · 决策核心</span><span class="stat__v ok">NOMINAL 正常</span><div class="meter"><i style="width:96%"></i></div></div>
+              <div class="stat"><span class="stat__k">REGRET INDEXER · 后悔索引器</span><span class="stat__v ok">NOMINAL 正常</span><div class="meter"><i style="width:91%"></i></div></div>
+              <div class="stat"><span class="stat__k">COURAGE SUBSYSTEM · 勇气子系统</span><span class="stat__v warn">DEGRADED 降级</span><div class="meter"><i class="meter--amber" style="width:23%"></i></div></div>
+              <div class="stat"><span class="stat__k">MOTIVATION FAN · 动力风扇</span><span class="stat__v err">STALLED 停转</span><div class="meter"><i class="meter--red" style="width:7%"></i></div></div>
+              <div class="stat"><span class="stat__k">SCROLL-MEMORY · 刷手机记忆</span><span class="stat__v ok">NOMINAL 正常</span><div class="meter"><i style="width:99%"></i></div></div>
+              <div class="stat"><span class="stat__k">SLEEP BUFFER · 睡眠缓存</span><span class="stat__v warn">LOW 偏低</span><div class="meter"><i class="meter--amber" style="width:18%"></i></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── ABOUT ─── -->
+        <section class="view" id="view-about">
+          <div class="section-title">ABOUT <span class="section-comment">// 你都干了些什么</span></div>
+          <div class="panel about-panel">
+            <pre class="ascii-art ascii-art--sm glitch">█▀█ █ █ █▀█ █▀█ █▀▄ █▄█ █▀█ █▀█
+█▀█ █▄█ █▀█ █▀█ █▀▄  █  █▀▄ █▀▄</pre>
+            <p class="about-lead">REGRET OS v2.4.1 — 决策引擎</p>
+            <p class="about-text">把你的<b class="hl">黑历史</b>喂给一台永远不会外传（因为它根本连不上网）的终端，
+            让它替你分析利弊、权衡风险、给出判决。<br>
+            // decisions made here are 100% offline, 200% judgemental.</p>
+            <p class="about-text dim">命题映射：主题「黑历史」= regret-archive 数据源 · 功能「决策器」= decision engine 核心 · 风格「黑客终端风」= 你正在看的这个界面</p>
+            <p class="about-text dim">BUILT FOR: TRAE 项目比赛 · DISCLAIMER: 本系统不构成任何建议，尤其是凌晨两点的建议。</p>
+          </div>
+        </section>
+
+      </div><!-- /.views -->
+
+      <!-- ══════════ COMMAND DOCK ══════════ -->
+      <div class="dock">
+        <div class="toast-stack" id="toast-stack"></div>
+        <form class="dock__form" id="dock-form" autocomplete="off">
+          <label class="dock__prompt" for="cmd-input">root@regret-os<span class="dim">:~$</span></label>
+          <div class="dock__inputwrap">
+            <input id="cmd-input" class="dock__input" type="text" spellcheck="false"
+                   placeholder="输入问题或命令… 试试：我该不该辞职去创业？ / Ask a question..." />
+            <span class="caret" aria-hidden="true"></span>
+          </div>
+          <button type="submit" class="btn btn--primary" id="btn-execute">EXECUTE <span class="btn__key">[↵]</span></button>
+          <button type="button" class="btn" id="btn-clear">CLEAR <span class="btn__key">[⌫]</span></button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- ══════════ STATUS BAR ══════════ -->
+  <footer class="statusbar">
+    <span class="status-ready" id="status-ready"><i class="pulse-dot"></i>READY</span>
+    <span class="status-sep">|</span>
+    <span>MODEL: local-7b</span>
+    <span class="status-sep">|</span>
+    <span>EMBEDDINGS: local</span>
+    <span class="status-sep">|</span>
+    <span>TOOLS: enabled</span>
+    <span class="status-sep">|</span>
+    <span>GUARDS: on</span>
+    <span class="status-spacer"></span>
+    <span class="waveform" aria-hidden="true">
+      <svg viewBox="0 0 120 16" preserveAspectRatio="none">
+        <path id="wave-path" fill="none" stroke="currentColor" stroke-width="1.2"
+          d="M0 8 L4 8 L6 4 L8 12 L10 6 L12 10 L14 8 L18 8 L20 2 L22 14 L24 8 L28 8 L30 5 L32 11 L34 8 L38 8 L40 6 L42 10 L44 8 L48 8 L50 3 L52 13 L54 8 L58 8 L60 7 L62 9 L64 8 L68 8 L70 4 L72 12 L74 8 L78 8 L80 6 L82 10 L84 8 L88 8 L90 2 L92 14 L94 8 L98 8 L100 5 L102 11 L104 8 L108 8 L110 7 L112 9 L114 8 L120 8"/>
+      </svg>
+    </span>
+    <span class="status-sep">|</span>
+    <span>CPU <b id="stat-cpu">12%</b></span>
+    <span class="status-sep">|</span>
+    <span>RAM <b id="stat-ram">3.1/16G</b></span>
+    <span class="status-sep">|</span>
+    <span>GPU <b id="stat-gpu">0%</b></span>
+    <span class="status-sep">|</span>
+    <span id="status-clock">--:--:--</span>
+  </footer>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
